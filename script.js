@@ -8,11 +8,11 @@ const form = document.getElementById('form');
 var d = new Date();
 
 const subCodes = {
-    "ec": ["ECE", "Ramanan", "Sample", "Sample2", "AAA"],
-    "ee": ["EEE", "Sample", "Sample2"],
-    "cs": ["CSW", "Sample", "Sample2"],
-    "me": ["ME", "Sample", "Sample2"],
-    "ce": ["CE", "Sample", "Sample2"]
+    "ec": ["Sample", "Sample", "Sample2", "AAA", "EC6502"],
+    "ee": ["Sample", "Sample2"],
+    "cs": ["Sample", "Sample2"],
+    "me": ["Sample", "Sample2"],
+    "ce": ["Sample", "Sample2"]
 }
 
 function deptChange(e) {
@@ -87,7 +87,7 @@ form.addEventListener('submit', e => {
         let url = "https://script.google.com/macros/s/AKfycbyXOKz_8pCY_u5a4D7pok6O8t8aYgpUHZmpMPGcXaQog_5zVRwOXP8qk8yywtgGIYuuUA/exec";
 
         if (deptElement.value == "ec") {
-            url = "https://script.google.com/macros/s/AKfycbw6DnFrqF5Uhz296TeT8-Tabofd6q2FMkNv_C6lVP2M5IjysWFdhdeevFAnV-DcWHa4/exec";
+            url = "https://script.google.com/macros/s/AKfycbzkSqubi0mYTCvkaV-jp0Dpz_KPmq9ZoDDjNJ_8DV09WkdUKGPwawHHeXyfplKI9mUcQg/exec";
         }
         const qs = new URLSearchParams({filename: fileName, mimeType: file.type, subCode: form.subCode.value});
         console.log(`${url}?${qs}`);
