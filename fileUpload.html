@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Exam Paper upload</title>
+        <style>
+            body {
+                padding: 0px;
+                margin: 0px;
+            }
+        </style>
+    </head>
+    <body>
+        <div style="background-color: bisque; padding: 20px 0px; margin-bottom: 20px;">
+            <h1 style="text-align: center;">Welcome to GCETJ</h1>
+        </div>
+        <form id="form" style="align-items: center; text-align: center;">
+            <label for="filename">Register Number: </label>
+            <input name="filename" id="filename" type="number" required><br><br>
+            <label for ="subCode">Subject Code: </label>
+            <input name="subCode" id="subCode" type="text" required><br><br>
+            <label for="file">Upload your answer paper here: </label>
+            <input name="file" id="uploadfile" type="file" required><br><br>
+            <input id="submit" type="submit">
+          </form>
+          <script>
+          const form = document.getElementById('form');
+          form.addEventListener('submit', e => {
+            e.preventDefault();
+            const file = form.file.files[0];
+            const fr = new FileReader();
+            try {
+                fr.readAsArrayBuffer(file);
+            } catch(err) {
+                alert("Please make sure you select the correct file");
+            }
+
+            fr.onload = f => {
+              
+                let fileName = form.filename.value + "-" + form.subCode.value + "-" + file.name;
+              const url = "https://script.google.com/macros/s/AKfycbxRTEQiJcUutpaUqYq43enUqi30Rlb3ogR0136Js751HIvUJ82euUDj9dodyJ-e1t6L8Q/exec";  // <--- Please set the URL of Web Apps.
+              
+              const qs = new URLSearchParams({filename: fileName, mimeType: file.type});
+              fetch(`${url}?${qs}`, {method: "POST", body: JSON.stringify([...new Int8Array(f.target.result)])})
+              .then(res => res.json())
+              .then(e => {
+                  console.log(e);
+                  alert("File uploaded successfully!");
+                })  // <--- You can retrieve the returned value here.
+              .catch(err => {
+                  console.log(err);
+                  alert("Something went Wrong! Please Try again!");
+                });
+            }
+          });
+          </script>
+    </body>
+</html>
