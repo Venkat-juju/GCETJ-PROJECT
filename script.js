@@ -2,6 +2,7 @@ const deptElement = document.getElementById("dept");
 const subCodesElement = document.getElementById("subCode");
 const yearElement = document.getElementById("year");
 const errElement = document.getElementById("errMessage");
+const uploadMessageElement = document.getElementById("uploadMessage")
 const form = document.getElementById('form');
 
 var d = new Date();
@@ -43,7 +44,7 @@ const checkInputs = () => {
 
 const checkTime = () => {
     console.log("Checking the time");
-    if (!(d.getHours() >= 13 && d.getHours() <= 14 || d.getHours() >= 18 && d.getHours() <= 19)) {
+    if (!(d.getHours() >= 13 && d.getHours() <= 14 || d.getHours() >= 18 && d.getHours() <= 22)) {
         errElement.style.display = "block";
         enabled = false;
         return false;
@@ -71,14 +72,23 @@ form.addEventListener('submit', e => {
     try {
         fr.readAsArrayBuffer(file);
     } catch(err) {
-        alert("Please make sure you selected the correct file");
+        alert("Please make sure you selected the correct file or contact your supervisor");
+        uploadMessageElement.innerHTML = 'UPLOADED SUCCESSFULLY';
+        uploadMessageElement.style.display = 'block';
     }
 
     fr.onload = f => {
         
+        uploadMessageElement.innerHTML = "Uploading... Please Wait!"
+        uploadMessageElement.style.display = 'block';
+
         let fileName = form.filename.value + "-" + form.subCode.value + "-" + file.name;
 
-        const url = "https://script.google.com/macros/s/AKfycbyXOKz_8pCY_u5a4D7pok6O8t8aYgpUHZmpMPGcXaQog_5zVRwOXP8qk8yywtgGIYuuUA/exec";
+        let url = "https://script.google.com/macros/s/AKfycbyXOKz_8pCY_u5a4D7pok6O8t8aYgpUHZmpMPGcXaQog_5zVRwOXP8qk8yywtgGIYuuUA/exec";
+
+        if (deptElement.value == "ec") {
+            url = "https://script.google.com/macros/s/AKfycbw6DnFrqF5Uhz296TeT8-Tabofd6q2FMkNv_C6lVP2M5IjysWFdhdeevFAnV-DcWHa4/exec";
+        }
         const qs = new URLSearchParams({filename: fileName, mimeType: file.type, subCode: form.subCode.value});
         console.log(`${url}?${qs}`);
         fetch(`${url}?${qs}`, {method: "POST", body: JSON.stringify([...new Int8Array(f.target.result)])})
@@ -87,9 +97,13 @@ form.addEventListener('submit', e => {
             console.log(e);
             alert("File uploaded successfully!");
             form.reset();
+            uploadMessageElement.innerHTML = 'UPLOADED SUCCESSFULLY';
+            uploadMessageElement.style.display = 'block';
         })  // <--- You can retrieve the returned value here.
         .catch(err => {
             console.log(err);
+            uploadMessageElement.innerHTML = 'UPLOADING FAILED';
+            uploadMessageElement.style.display = 'block';
             alert("Something went Wrong! Please Try again!");
         });
     }
